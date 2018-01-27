@@ -33,10 +33,34 @@ export default class ModelExample extends React.Component {
     })
   }
 
+cleanJsonExample = (example) => {
+    let sample = example;
+    if (typeof sample.props['param'] !== 'undefined'
+        && typeof sample.props.param['_list'] !== 'undefined'
+        && typeof sample.props.param._list['_tail'] !== 'undefined'
+        && typeof 'array' in sample.props.param._list._tail['array'] !== 'undefined'
+        && sample.props.param._list._tail.array.length > 4
+    ) {
+        let s = sample.props.param._list._tail.array[4][1]
+        s = s.replace(/\\n/g, '')
+        s = s.replace(/\\r/g, '')
+        s = s.replace(/\\t/g, '')
+        s = s.replace(/\\/g, '')
+        s = s.replace(/\ /g, '')
+        s = s.replace('"{', '{')
+        s = s.replace('}"', '}')
+        let obj = JSON.parse(s)
+        sample.props.param._list._tail.array[4][1] = JSON.stringify(obj, null, 4)
+    }
+    return sample
+}
+
   render() {
     let { getComponent, specSelectors, schema, example, isExecute, getConfigs, specPath } = this.props
     let { defaultModelExpandDepth } = getConfigs()
     const ModelWrapper = getComponent("ModelWrapper")
+
+    let fixed = this.cleanJsonExample(example)
 
     return <div>
       <ul className="tab">
@@ -49,7 +73,7 @@ export default class ModelExample extends React.Component {
       </ul>
       <div>
         {
-          (isExecute || this.state.activeTab === "example") && example
+          (isExecute || this.state.activeTab === "example") && fixed
         }
         {
           !isExecute && this.state.activeTab === "model" && <ModelWrapper schema={ schema }
