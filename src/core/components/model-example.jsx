@@ -42,6 +42,9 @@ cleanJsonExample = (example) => {
         && sample.props.param._list._tail.array.length > 4
     ) {
         let s = sample.props.param._list._tail.array[4][1]
+        if (typeof s !== 'string') {
+            return sample;
+        }
         s = s.replace(/\\n/g, '')
         s = s.replace(/\\r/g, '')
         s = s.replace(/\\t/g, '')
