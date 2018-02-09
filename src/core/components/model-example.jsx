@@ -52,6 +52,8 @@ cleanJsonExample = (example) => {
         s = s.replace(/\ /g, '')
         s = s.replace('"{', '{')
         s = s.replace('}"', '}')
+        s = s.replace('"[', '[')
+        s = s.replace(']"', ']')
         let obj = JSON.parse(s)
         sample.props.param._list._tail.array[4][1] = JSON.stringify(obj, null, 4)
     }
